@@ -72,26 +72,27 @@ Route::get('/', function () use ($tasks) {
     return view('index', [
         'tasks' => $tasks
     ]);
-});
+})->name('tasks.index');
 
-Route::get('/xxx', function () {
-    return 'Hello';
-})->name('hello');
+Route::get('/{id}', function ($id) {
+    return 'One single task';
+})->name('tasks.show');
 
-Route::get('/hallo', function () {
-    return redirect()->route('hello');
-});
+// Route::get('/xxx', function () {
+//     return 'Hello';
+// })->name('hello');
 
-Route::get('/greet/{name}', function ($name) {
-    return 'Hello ' . $name . '!';
-});
+// Route::get('/hallo', function () {
+//     return redirect()->route('hello');
+// });
+
+// Route::get('/greet/{name}', function ($name) {
+//     return 'Hello ' . $name . '!';
+// });
 
 //Fallback route when the link is not find in the above routes this method will be executed
+
 Route::fallback(function () {
     return 'Not Found';
 });
-// GET
-// POST
-// PUT
-// DELETE
 
