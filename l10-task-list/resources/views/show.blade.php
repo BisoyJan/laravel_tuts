@@ -19,4 +19,12 @@
     <p>This task is not completed</p>
 @endif
 
+<div>
+    <form action="{{ route('tasks.destroy', ['task' => $task->id]) }}" method="POST">
+        @csrf
+        @method('DELETE')
+
+        <button type="submit">Delete</button>
+</div>
+
 @endsection
