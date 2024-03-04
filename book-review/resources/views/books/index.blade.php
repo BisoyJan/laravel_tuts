@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-10 text-2x1">Books</h1>
+    <h1 class="mb-10 text-2xl">Books</h1>
 
-    <form action="{{ route('books.index') }}" method="GET" class="mb-4 flex items-center space-x-2">
-        <input type="text" name="title" value="{{ request()->query('title') }}" class="input h-10"
-            placeholder="Search by title" value="{{ request('title') }}">
-
-        <input type="hidden" name="filter" value="{{ request('filter') }}" id="">
-
+    <form method="GET" action="{{ route('books.index') }}" class="mb-4 flex items-center space-x-2">
+        <input type="text" name="title" placeholder="Search by title" value="{{ request('title') }}" class="input h-10" />
+        <input type="hidden" name="filter" value="{{ request('filter') }}" />
         <button type="submit" class="btn h-10">Search</button>
         <a href="{{ route('books.index') }}" class="btn h-10">Clear</a>
     </form>
@@ -18,9 +15,9 @@
             $filters = [
                 '' => 'Latest',
                 'popular_last_month' => 'Popular Last Month',
-                'popular_last_6months' => 'Popular Last 6 Months',
+                'popular_last_6_months' => 'Popular Last 6 Months',
                 'highest_rated_last_month' => 'Highest Rated Last Month',
-                'highest_rated_last_6months' => 'Highest Rated Last 6 Months',
+                'highest_rated_last_6_months' => 'Highest Rated Last 6 Months',
             ];
         @endphp
 
@@ -33,7 +30,7 @@
     </div>
 
     <ul>
-        @forelse($books as $book)
+        @forelse ($books as $book)
             <li class="mb-4">
                 <div class="book-item">
                     <div class="flex flex-wrap items-center justify-between">
