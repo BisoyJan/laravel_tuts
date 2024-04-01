@@ -10,15 +10,21 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-
     use CanLoadRelationships;
+
+    private array $relations = ['user', 'attendees', 'attendees.user'];
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $relations = ['user', 'attendees', 'attendees.user'];
-        $query = $this->loadRelationships(Event::query(), $relations);
+        $query = $this->loadRelationships(Event::query());
 
         return EventResource::collection(
             $query->latest()->paginate()
@@ -30,7 +36,6 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-
         $event = Event::create([
             ...$request->validate([
                 'name' => 'required|string|max:255',
@@ -38,10 +43,10 @@ class EventController extends Controller
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time'
             ]),
-            'user_id' => 1
+            'user_id' => $request->user()->id
         ]);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -49,8 +54,9 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load('user', 'attendees');
-        return new EventResource($event);
+        return new EventResource(
+            $this->loadRelationships($event)
+        );
     }
 
     /**
@@ -67,7 +73,7 @@ class EventController extends Controller
             ])
         );
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -77,8 +83,6 @@ class EventController extends Controller
     {
         $event->delete();
 
-        return response()->json([
-            'message' => 'Event deleted successfully'
-        ]);
+        return response(status: 204);
     }
 }
