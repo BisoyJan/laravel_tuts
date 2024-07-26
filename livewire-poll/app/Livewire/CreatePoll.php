@@ -19,7 +19,7 @@ class CreatePoll extends Component
     protected $messages = [
         'options.*' => 'The Option must be between 1 and 255 characters',
     ];
-    
+
     public function render()
     {
         return view('livewire.create-poll');
@@ -50,16 +50,17 @@ class CreatePoll extends Component
         $poll = Poll::create([
             'title' => $this->title
         ])->options()->createMany(
-            collect($this->options)
-                ->map(fn($options) => ['name' => $options])
-                ->all()
+                collect($this->options)
+                    ->map(fn($options) => ['name' => $options])
+                    ->all()
             );
 
         // foreach ($this->options as $optionsName){
         //     $poll->options()->create(['name' => $optionsName]);
         // }
-
         $this->reset(['title', 'options']);
+        $this->dispatch('pollCreated');
+
     }
-    
+
 }
