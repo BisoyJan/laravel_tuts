@@ -37,6 +37,11 @@ class JobController extends Controller
                 function ($query) {
                     $query->where('experience', request('experience'));
                 }
+            )->when(
+                request('category'),
+                function ($query) {
+                    $query->where('category', request('category'));
+                }
             );
         return view('job.index', ['jobs' => $jobs->get()]);
     }
