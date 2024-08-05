@@ -36,35 +36,37 @@ class Job extends Model
     {
         // Apply search filter
         return $query->when(
-            $filters['search'] ?? null,
-            function ($query, $search) {
-                // Search in title and description fields
-                $query->where(function ($query) use ($search) {
-                    $query->where('title', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%');
+            $filters['search'] ?? null, // If search parameter is set, apply the filter
+            function ($query, $search) { // Callback function to apply the filter
+                $query->where(function ($query) use ($search) { // Use a closure to apply multiple where conditions
+                    $query->where('title', 'like', '%' . $search . '%') // Search in title field
+                        ->orWhere('description', 'like', '%' . $search . '%') // Search in description field
+                        ->orWhereHas('employer', function ($query) use ($search) { // Search in employer's company name
+                        $query->where('company_name', 'like', '%' . $search . '%');
+                    });
                 });
             }
-        )->when(
-                // Apply minimum salary filter
-                $filters['min_salary'] ?? null,
+        )
+            ->when(
+                $filters['min_salary'] ?? null, // Apply minimum salary filter
                 function ($query, $minSalary) {
                     $query->where('salary', '>=', $minSalary);
                 }
-            )->when(
-                // Apply maximum salary filter
-                $filters['max_salary'] ?? null,
+            )
+            ->when(
+                $filters['max_salary'] ?? null, // Apply maximum salary filter
                 function ($query, $maxSalary) {
                     $query->where('salary', '<=', $maxSalary);
                 }
-            )->when(
-                // Apply experience filter
-                $filters['experience'] ?? null,
+            )
+            ->when(
+                $filters['experience'] ?? null, // Apply experience filter
                 function ($query, $experience) {
                     $query->where('experience', $experience);
                 }
-            )->when(
-                // Apply category filter
-                $filters['category'] ?? null,
+            )
+            ->when(
+                $filters['category'] ?? null, // Apply category filter
                 function ($query, $category) {
                     $query->where('category', $category);
                 }
