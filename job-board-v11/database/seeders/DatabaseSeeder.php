@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\JobApplication;
 use App\Models\User;
 use App\Models\Job;
 use App\Models\Employer;
@@ -40,7 +41,16 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // User::factory(10)->create();
+        foreach ($users as $user) {
+            $jobs = Job::inRandomOrder()->take(rand(0, 4))->get();
+
+            foreach ($jobs as $job) {
+                JobApplication::factory()->create([
+                    'job_id' => $job->id,
+                    'user_id' => $user->id
+                ]);
+            }
+        }
 
 
     }
